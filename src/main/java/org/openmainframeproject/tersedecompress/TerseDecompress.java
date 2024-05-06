@@ -66,33 +66,14 @@ class TerseDecompress {
 		parseArgs(args);
         
         if (isHelpRequested == true) 
-        {
-            printUsageAndExit();
-        }   	
+            printUsageAndExit();	
         
     	if (inputFileName == null)
-    	{
     		printUsageAndExit();
-    	}
 
-        if (outputFileName == null) {
+        if (outputFileName == null) 
             outputFileName = inputFileName + ".txt";
-        }
-        
-        System.out.println("Opening output file (" + outputFileName + ")");
-        var outputStream = null;
-        try {
-            if (outputFileName.endsWith(".gz")) {
-                outputStream = new GZIPOutputStream(new FileOutputStream(outputFileName), 8192, true);
-            }
-            else {
-                outputStream = new FileOutputStream(outputFileName);
-            }
-        }
-        catch (Exception e) {
-            System.out.println("Got exception while opening output file (" + outputFileName + ").\nError message:\n" + e.toString());
-        }
-        
+                
         System.out.println("Attempting to decompress input file (" + inputFileName + ") to output file (" + outputFileName + ")");
 	
         TerseDecompresser outputWriter = null;
