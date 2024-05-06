@@ -143,6 +143,7 @@ class TerseDecompress {
             else // we have more args than we know what to do with
             {
                 isHelpRequested = true;
+                break;
             }
         }
     }
