@@ -64,7 +64,8 @@ class TerseDecompress {
 	
     private void process (String args[]) throws Exception {
 		parseArgs(args);
-    	if (args.length == 0 || (inputFileName == null && outputFileName == null) || (outputFileName == null && textMode == false) || isHelpRequested == true) 
+        
+        if (isHelpRequested == true) 
         {
             printUsageAndExit();
         }
@@ -98,7 +99,7 @@ class TerseDecompress {
                 printUsageAndExit();   		
     		}
     	}
-    	if (inputFileName == null || outputFileName == null)
+    	if (inputFileName == null)
     	{
     		printUsageAndExit();
     	}
@@ -135,7 +136,7 @@ class TerseDecompress {
             else if (inputFileName == null) {
                 inputFileName = args[i];
             }
-            // second non-flag argument is the input file name
+            // second non-flag argument is the output file name
             else if (outputFileName == null) {
                 outputFileName = args[i];
             }
