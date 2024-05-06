@@ -68,58 +68,39 @@ class TerseDecompress {
         if (isHelpRequested == true) 
         {
             printUsageAndExit();
-        }
-
-        if (outputFileName == null) {
-            outputFileName = inputFileName + ".txt";
-        }    	
+        }   	
         
-    	for (int i=0; i < args.length; i++)
-    	{
-    		if (args[i].equals("-h") || args[i].equals("--help"))
-    		{
-                printUsageAndExit();
-    		}
-    		else if (args[i].equals("-b"))
-    		{
-    			textMode = false;
-    		}
-    		// first non-flag argument is the input file name 
-    		else if (inputFileName == null)
-    		{
-    			inputFileName = args[i];
-    		}
-    		// second non-flag argument is the input file name 
-    		else if (outputFileName == null)
-    		{
-    			outputFileName = args[i];
-    		}
-    		else // we have more args than we know what to do with
-    		{
-                printUsageAndExit();   		
-    		}
-    	}
     	if (inputFileName == null)
     	{
     		printUsageAndExit();
     	}
 
-		System.out.println("Attempting to decompress input file (" + inputFileName +") to output file (" + outputFileName +")");
-
-		if (outputFileName.endsWith(".gz")) {
-			try (TerseDecompresser outputWriter = TerseDecompresser.create(new FileInputStream(inputFileName), new GZIPOutputStream(new FileOutputStream(outputFileName), 8192, true)))
-			{	 
-				outputWriter.TextFlag = textMode;
-				outputWriter.decode();
-			}
-		}
-		else {
-			try (TerseDecompresser outputWriter = TerseDecompresser.create(new FileInputStream(inputFileName), new FileOutputStream(outputFileName)))
-			{	 
-				outputWriter.TextFlag = textMode;
-				outputWriter.decode();
-			}
-		}
+        if (outputFileName == null) {
+            outputFileName = inputFileName + ".txt";
+        }
+        
+        System.out.println("Opening output file (" + outputFileName + ")");
+        var outputStream = null;
+        try {
+            if (outputFileName.endsWith(".gz")) {
+                outputStream = new GZIPOutputStream(new FileOutputStream(outputFileName), 8192, true);
+            }
+            else {
+                outputStream = new FileOutputStream(outputFileName);
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Got exception while opening output file (" + outputFileName + ").\nError message:\n" + e.toString());
+        }
+        
+        System.out.println("Attempting to decompress input file (" + inputFileName + ") to output file (" + outputFileName + ")");
+        try (TerseDecompresser outputWriter = TerseDecompresser.create(new FileInputStream(inputFileName), outputStream)) {	 
+            outputWriter.TextFlag = textMode;
+            outputWriter.decode();
+        }
+        catch (Exception e) {
+            System.out.println("Got exception while decompressing input file (" + inputFileName + ").\nError message:\n" + e.toString());
+        }
 
         System.out.println("Processing completed");
     }
