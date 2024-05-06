@@ -94,12 +94,23 @@ class TerseDecompress {
         }
         
         System.out.println("Attempting to decompress input file (" + inputFileName + ") to output file (" + outputFileName + ")");
-        try (TerseDecompresser outputWriter = TerseDecompresser.create(new FileInputStream(inputFileName), outputStream)) {	 
-            outputWriter.TextFlag = textMode;
-            outputWriter.decode();
-        }
-        catch (Exception e) {
+	
+        TerseDecompresser outputWriter = null;
+        try {
+            if (outputFileName.endsWith(".gz"))
+                outputWriter = TerseDecompresser.create(new FileInputStream(inputFileName), new GZIPOutputStream(new FileOutputStream(outputFileName), 8192, true));
+            else 
+                outputWriter = TerseDecompresser.create(new FileInputStream(inputFileName), new FileOutputStream(outputFileName)); 
+
+			outputWriter.TextFlag = textMode;
+			outputWriter.decode();
+		}
+        catch( IOException e) {
             System.out.println("Got exception while decompressing input file (" + inputFileName + ").\nError message:\n" + e.toString());
+        }
+        finally {
+            if (outputWriter != null)
+                outputWriter.close();
         }
 
         System.out.println("Processing completed");
