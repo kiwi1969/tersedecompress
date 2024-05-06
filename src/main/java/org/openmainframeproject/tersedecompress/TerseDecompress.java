@@ -44,7 +44,10 @@ class TerseDecompress {
             "Usage: \"TerseDecompress <input file> <output file> [-b]\"\n\n"
            +"Java TerseDecompress will decompress a file compressed using the terse program on z/OS\n"
            +"Default mode is text mode, which will attempt EBCDIC -> ASCII conversion\n"
-           +"If no <output file> provided in text mode, it will default to <input file>.txt\n"
+           +"If no <output file> is provided, it will default to either\n"
+           +" 1) if <input file.trs> then <input file>\n"
+           +" 2) if <input file> and text mode, then <input file.txt>\n"
+           +" 3) if <input file> and binary mode, then <input file.bin>\n"
            +"Options:\n"
            +"-b flag turns on binary mode, no conversion will be attempted\n"
            +"-h or --help prints this message\n"
@@ -71,8 +74,16 @@ class TerseDecompress {
     	if (inputFileName == null)
     		printUsageAndExit();
 
-        if (outputFileName == null) 
-            outputFileName = inputFileName + ".txt";
+        if (outputFileName == null) {
+            if (inputFileName.toLowerCase().endsWith(".trs") )
+                outputFileName = inputFileName.substring(0, inputFileName.length() - 4);
+            else {
+                if (textMode)
+                    outputFileName = inputFileName.concat(".txt");
+                else
+                    outputFileName = inputFileName.concat(".bin");
+            }
+        }
                 
         System.out.println("Attempting to decompress input file (" + inputFileName + ") to output file (" + outputFileName + ")");
 	
