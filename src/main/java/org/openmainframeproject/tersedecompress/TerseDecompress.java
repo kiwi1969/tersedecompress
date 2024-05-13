@@ -53,7 +53,7 @@ class TerseDecompress {
            +"-h or --help prints this message\n"
           );
 	
-    private static final String Version = new String ("Version 6, March 2024");
+    private static final String Version = new String ("Version 5, May 2024");
     private String inputFileName = null;
     private String outputFileName = null;
     private boolean isHelpRequested = false;
