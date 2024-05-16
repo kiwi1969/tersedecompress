@@ -113,7 +113,7 @@ class TerseDecompress {
             if (args[i].equals("-h") || args[i].equals("--help")) {
                 isHelpRequested = true;
             }
-            else if (args[i].equals("-b")) {
+            else if (textMode && args[i].equals("-b")) {
                 textMode = false;
             }
             // first non-flag argument is the input file name
